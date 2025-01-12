@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9yh-z8-Lsx">
-                                <rect key="frame" x="23" y="93" width="354" height="66"/>
+                                <rect key="frame" x="23" y="34" width="354" height="66"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="66" id="XPD-2Y-uDI"/>
                                 </constraints>
@@ -26,23 +26,17 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="E-Mail" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="B0o-jk-Zvm">
-                                <rect key="frame" x="32" y="213" width="321" height="34"/>
+                                <rect key="frame" x="32" y="154" width="321" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" keyboardType="emailAddress" textContentType="email"/>
-                                <connections>
-                                    <action selector="emailField:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="2nf-VB-q5e"/>
-                                </connections>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IEA-dA-vNq">
-                                <rect key="frame" x="36" y="295" width="321" height="34"/>
+                                <rect key="frame" x="36" y="236" width="321" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" textContentType="password"/>
-                                <connections>
-                                    <action selector="emailField:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="4SY-wt-KP9"/>
-                                </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nvm-QZ-oTg">
-                                <rect key="frame" x="59" y="433" width="106" height="35"/>
+                                <rect key="frame" x="59" y="467" width="106" height="35"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="106" id="eLB-Tp-YGT"/>
                                 </constraints>
@@ -53,7 +47,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S3k-wW-bwI">
-                                <rect key="frame" x="232" y="433" width="113" height="35"/>
+                                <rect key="frame" x="232" y="467" width="113" height="35"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Sign Up"/>
                                 <connections>
@@ -80,9 +74,10 @@
                             <constraint firstItem="B0o-jk-Zvm" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="32" id="zYz-N1-Z7p"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="fKY-Rt-Z3h"/>
                     <connections>
-                        <outlet property="emailField" destination="B0o-jk-Zvm" id="hx8-BZ-3Id"/>
-                        <outlet property="passwordField" destination="IEA-dA-vNq" id="QiQ-Af-PBw"/>
+                        <outlet property="emailField" destination="B0o-jk-Zvm" id="cQD-HG-t5A"/>
+                        <outlet property="passwordField" destination="IEA-dA-vNq" id="eYI-eZ-avJ"/>
                         <segue destination="tdE-qY-Zzz" kind="presentation" identifier="toFeedVC" modalPresentationStyle="fullScreen" id="JA2-JO-eD9"/>
                     </connections>
                 </viewController>
@@ -93,10 +88,19 @@
         <!--Uplaod-->
         <scene sceneID="jy1-8j-nNa">
             <objects>
-                <viewController id="SNb-In-uS2" sceneMemberID="viewController">
+                <viewController id="SNb-In-uS2" customClass="UploadViewController" customModule="socialApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="pYb-el-DJs">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="UPLOAD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RlX-d9-P2D">
+                                <rect key="frame" x="175" y="100" width="67" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="k2a-G4-r1D"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
@@ -104,12 +108,42 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fki-DR-HQy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2079" y="433"/>
+            <point key="canvasLocation" x="2078.6259541984732" y="432.3943661971831"/>
+        </scene>
+        <!--Settings-->
+        <scene sceneID="Axm-hZ-NOw">
+            <objects>
+                <viewController id="RrC-he-LOi" customClass="SettingsViewController" customModule="socialApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Fd0-9Y-ml8">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iJ6-RL-M1H">
+                                <rect key="frame" x="158" y="409" width="78" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="tinted" title="Logout"/>
+                                <connections>
+                                    <action selector="logoutClicked:" destination="RrC-he-LOi" eventType="touchUpInside" id="MP3-8a-Run"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="wjx-w0-q0Q"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Settings" image="gearshape" catalog="system" id="AVh-MG-mud"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="presentation" identifier="toViewController" modalPresentationStyle="fullScreen" id="mAP-tn-cgr"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PgK-YE-6eU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2079" y="1146"/>
         </scene>
         <!--Feed-->
         <scene sceneID="avR-R1-Y04">
             <objects>
-                <viewController id="Lmb-kD-WaJ" sceneMemberID="viewController">
+                <viewController id="Lmb-kD-WaJ" customClass="FeedViewController" customModule="socialApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="J1Q-wW-7nH">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -135,6 +169,7 @@
                     <connections>
                         <segue destination="Lmb-kD-WaJ" kind="relationship" relationship="viewControllers" id="syq-6J-a2t"/>
                         <segue destination="SNb-In-uS2" kind="relationship" relationship="viewControllers" id="Dqt-yV-GNX"/>
+                        <segue destination="RrC-he-LOi" kind="relationship" relationship="viewControllers" id="8CM-jb-353"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dZE-Dh-1Bg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -144,6 +179,7 @@
     </scenes>
     <resources>
         <image name="figure.socialdance" catalog="system" width="128" height="105"/>
+        <image name="gearshape" catalog="system" width="128" height="123"/>
         <image name="square.and.arrow.up" catalog="system" width="110" height="128"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
