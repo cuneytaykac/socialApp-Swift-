@@ -19,10 +19,24 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
     }
     @IBAction func signInClicked(_ sender: Any) {
-        performSegue(withIdentifier:"toFeedVC", sender: nil)
+        guard let email = emailField.text, !email.isEmpty,
+                    let password = passwordField.text, !password.isEmpty else {
+            showAlert(titleInput: "Hata", messageInput: "Lütfen tüm alanları doldurunuz.")
+                  return
+              }
+
+              Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
+                  guard let self = self else { return }
+
+                  if let error = error {
+                      self.handleFirebaseError(error)
+                  } else {
+                      self.performSegue(withIdentifier: "toFeedVC", sender: nil)
+                  }
+              }
+        
     }
     
     @IBAction func signUpClicked(_ sender: Any) {
