@@ -7,6 +7,9 @@
 
 import UIKit
 import FirebaseStorage
+import FirebaseCore
+import FirebaseFirestore
+import FirebaseAuth
 
 class UploadViewController: UIViewController {
 
@@ -82,7 +85,30 @@ class UploadViewController: UIViewController {
                             return
                         }else{
                             let imageUrl = url?.absoluteString
-                            print("imageUrl: \(imageUrl)")
+                        
+                            
+                            // DATABASE
+                            
+                           
+                            let db = Firestore.firestore()
+                            
+                            var firestoreRef : DocumentReference? = nil
+                            
+                            var sendData = ["imageUrl":imageUrl,"createdBy":Auth.auth().currentUser?.email,"postComment":self.contentField.text ?? "No comment","date":FieldValue.serverTimestamp(),"likes":0]
+                            
+                            firestoreRef = db.collection("Post").addDocument(data: sendData, completion: { (error) in
+                                
+                                if error != nil {
+                                    self.showAlert(titleInput: "Error", messageInput: "\(error?.localizedDescription)")
+                                }else{
+                                    self.tabBarController?.selectedIndex = 0
+                                    self.imageView.image = UIImage(systemName: "photo.badge.plus.fill")
+
+                                    self.contentField.text = ""
+                                    
+                                }
+                            })
+                            
                         }
                         
                         
