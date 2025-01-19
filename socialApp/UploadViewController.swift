@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseStorage
 
 class UploadViewController: UIViewController {
 
@@ -55,6 +56,42 @@ class UploadViewController: UIViewController {
 
     
     @IBAction func saveButton(_ sender: Any) {
+        // Get a reference to the storage service using the default Firebase App
+        let storage = Storage.storage()
+
+        // Create a storage reference from our storage service
+        let storageRef = storage.reference()
+        
+        let mediaFolder = storageRef.child("media")
+        
+        if let imageData = imageView.image?.jpegData(compressionQuality: 0.5){
+            let imageRef = mediaFolder.child("\(UUID().uuidString).jpg")
+            
+            imageRef.putData(imageData, metadata: nil) { (metadata, error) in
+                if let error = error {
+                    print("Error uploading image: \(error)")
+                    
+                    self.showAlert(titleInput: "Upload Error", messageInput:"\(error.localizedDescription)")
+                    return
+                }
+                else{
+                    imageRef.downloadURL{ (url,error) in
+                        if let error = error {
+                            self.showAlert(titleInput: "Dowland Error", messageInput:"\(error.localizedDescription)")
+                          
+                            return
+                        }else{
+                            let imageUrl = url?.absoluteString
+                            print("imageUrl: \(imageUrl)")
+                        }
+                        
+                        
+                    }
+                }
+              
+            }
+        }
+            
     }
     
    

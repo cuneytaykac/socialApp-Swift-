@@ -79,6 +79,14 @@ class ViewController: UIViewController {
             showAlert(titleInput: "Hata", messageInput: "Bilinmeyen bir hata oluştu. Lütfen tekrar deneyin.")
         }
     }
+   
+}
+
+
+
+import UIKit
+
+extension UIViewController {
     func showAlert(titleInput:String,messageInput:String?){
         let alert = UIAlertController(title: titleInput, message: messageInput, preferredStyle: .alert)
         
@@ -88,4 +96,3 @@ class ViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
 }
-
