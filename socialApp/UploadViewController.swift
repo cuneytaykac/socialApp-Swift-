@@ -15,31 +15,40 @@ class UploadViewController: UIViewController {
 
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var contentField: UITextField!
+    private var activityIndicator: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Delegate atamasını yapıyoruz
         setupUI()
+        setupActivityIndicator()
     }
     // MARK: - UI Setup
-       private func setupUI() {
-           // UITextField delegate ataması
-           contentField.delegate = self
-           
-           // UIImageView'e tıklama özelliği ekleme
-           let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleImageViewTap))
-           imageView.isUserInteractionEnabled = true
-           imageView.addGestureRecognizer(tapGestureRecognizer)
+        private func setupUI() {
+            contentField.delegate = self
+            setupImageViewGesture()
+        }
+    
+    private func setupActivityIndicator() {
+           activityIndicator = UIActivityIndicatorView(style: .large)
+           activityIndicator.center = view.center
+           activityIndicator.hidesWhenStopped = true
+           activityIndicator.color = .gray
+           view.addSubview(activityIndicator)
        }
+    
+    private func setupImageViewGesture() {
+          let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleImageViewTap))
+          imageView.isUserInteractionEnabled = true
+          imageView.addGestureRecognizer(tapGestureRecognizer)
+      }
     // MARK: - Actions
        @objc private func handleImageViewTap() {
            presentImagePicker()
        }
        
-    // MARK: - Helper Methods
-        private func presentImagePicker() {
+    private func presentImagePicker() {
             guard UIImagePickerController.isSourceTypeAvailable(.photoLibrary) else {
-                showAlert(title: "Hata", message: "Fotoğraf galerisine erişilemiyor.")
+                self.showAlert(titleInput: "Hata",messageInput : "Fotoğraf galerisine erişilemiyor.")
                 return
             }
             
@@ -50,75 +59,87 @@ class UploadViewController: UIViewController {
             present(imagePicker, animated: true)
         }
         
-        private func showAlert(title: String, message: String) {
-            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "Tamam", style: .default)
-            alertController.addAction(okAction)
-            present(alertController, animated: true)
-        }
+        
 
     
     @IBAction func saveButton(_ sender: Any) {
-        // Get a reference to the storage service using the default Firebase App
-        let storage = Storage.storage()
-
-        // Create a storage reference from our storage service
-        let storageRef = storage.reference()
-        
-        let mediaFolder = storageRef.child("media")
-        
-        if let imageData = imageView.image?.jpegData(compressionQuality: 0.5){
-            let imageRef = mediaFolder.child("\(UUID().uuidString).jpg")
-            
-            imageRef.putData(imageData, metadata: nil) { (metadata, error) in
-                if let error = error {
-                    print("Error uploading image: \(error)")
-                    
-                    self.showAlert(titleInput: "Upload Error", messageInput:"\(error.localizedDescription)")
-                    return
-                }
-                else{
-                    imageRef.downloadURL{ (url,error) in
-                        if let error = error {
-                            self.showAlert(titleInput: "Dowland Error", messageInput:"\(error.localizedDescription)")
-                          
-                            return
-                        }else{
-                            let imageUrl = url?.absoluteString
-                        
-                            
-                            // DATABASE
-                            
-                           
-                            let db = Firestore.firestore()
-                            
-                            var firestoreRef : DocumentReference? = nil
-                            
-                            var sendData = ["imageUrl":imageUrl,"createdBy":Auth.auth().currentUser?.email,"postComment":self.contentField.text ?? "No comment","date":FieldValue.serverTimestamp(),"likes":0]
-                            
-                            firestoreRef = db.collection("Post").addDocument(data: sendData, completion: { (error) in
-                                
-                                if error != nil {
-                                    self.showAlert(titleInput: "Error", messageInput: "\(error?.localizedDescription)")
-                                }else{
-                                    self.tabBarController?.selectedIndex = 0
-                                    self.imageView.image = UIImage(systemName: "photo.badge.plus.fill")
-
-                                    self.contentField.text = ""
-                                    
-                                }
-                            })
-                            
-                        }
-                        
-                        
-                    }
-                }
-              
-            }
-        }
+        guard let imageData = imageView.image?.jpegData(compressionQuality: 0.5) else {
+                   showAlert(titleInput: "Hata", messageInput: "Bir resim seçmelisiniz.")
+                   return
+               }
+               
+               toggleLoading(true)
+               
+               let storage = Storage.storage()
+               let mediaFolder = storage.reference().child("media")
+               let imageRef = mediaFolder.child("\(UUID().uuidString).jpg")
+               
+               imageRef.putData(imageData, metadata: nil) { [weak self] metadata, error in
+                   guard let self = self else { return }
+                   
+                   if let error = error {
+                       self.toggleLoading(false)
+                       self.showAlert(titleInput: "Upload Error", messageInput: error.localizedDescription)
+                       return
+                   }
+                   
+                   imageRef.downloadURL { url, error in
+                       if let error = error {
+                           self.toggleLoading(false)
+                           self.showAlert(titleInput: "Download Error", messageInput: error.localizedDescription)
+                           return
+                       }
+                       
+                       guard let imageUrl = url?.absoluteString else {
+                           self.toggleLoading(false)
+                           self.showAlert(titleInput: "Hata", messageInput: "Resim URL'si alınamadı.")
+                           return
+                       }
+                       
+                       self.saveToDatabase(imageUrl: imageUrl)
+                   }
+               }
             
     }
+    private func saveToDatabase(imageUrl: String) {
+           let db = Firestore.firestore()
+           
+           let sendData: [String: Any] = [
+               "imageUrl": imageUrl,
+               "createdBy": Auth.auth().currentUser?.email ?? "Unknown",
+               "postComment": contentField.text ?? "No comment",
+               "date": FieldValue.serverTimestamp(),
+               "likes": 0
+           ]
+           
+           db.collection("Post").addDocument(data: sendData) { [weak self] error in
+               guard let self = self else { return }
+               
+               self.toggleLoading(false)
+               
+               if let error = error {
+                   self.showAlert(titleInput: "Error", messageInput: error.localizedDescription)
+               } else {
+                   self.resetUI()
+                   self.tabBarController?.selectedIndex = 0
+               }
+           }
+       }
+    private func resetUI() {
+           imageView.image = UIImage(systemName: "photo.badge.plus.fill")
+           contentField.text = ""
+       }
+
+       // MARK: - Loading State
+       private func toggleLoading(_ isLoading: Bool) {
+           if isLoading {
+               activityIndicator.startAnimating()
+               view.isUserInteractionEnabled = false
+           } else {
+               activityIndicator.stopAnimating()
+               view.isUserInteractionEnabled = true
+           }
+       }
     
    
 
@@ -130,6 +151,7 @@ extension UploadViewController: UITextFieldDelegate {
         return true
     }
 }
+
 // MARK: - UIImagePickerControllerDelegate, UINavigationControllerDelegate
 extension UploadViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
