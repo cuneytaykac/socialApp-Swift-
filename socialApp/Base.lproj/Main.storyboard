@@ -216,7 +216,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RKG-cW-vfn">
-                                                    <rect key="frame" x="-7" y="112" width="82" height="454.33333333333337"/>
+                                                    <rect key="frame" x="-7" y="111.99999999999997" width="82" height="454.33333333333326"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="454.33333333333337" id="1zc-Kr-yhv"/>
                                                     </constraints>
