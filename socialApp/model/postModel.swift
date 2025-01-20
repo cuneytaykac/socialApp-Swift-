@@ -14,16 +14,19 @@ struct Post: Codable {
     let imageUrl: URL
     let createdBy: String
     let likes: Int
+    let documentId: String
     
     // Firebase'den gelen veriyi işlemek için init
-    init?(dictionary: [String: Any]) {
+    init?(dictionary: [String: Any],documentId: String) {
         guard
             let postComment = dictionary["postComment"] as? String,
             let timestamp = dictionary["date"] as? Timestamp,
             let imageUrlString = dictionary["imageUrl"] as? String,
             let imageUrl = URL(string: imageUrlString),
             let createdBy = dictionary["createdBy"] as? String,
-            let likes = dictionary["likes"] as? Int
+            let likes = dictionary["likes"] as? Int,
+            let documentID = documentId as? String
+
         else {
             return nil
         }
@@ -33,6 +36,7 @@ struct Post: Codable {
         self.imageUrl = imageUrl
         self.createdBy = createdBy
         self.likes = likes
+        self.documentId = documentID
     }
 }
 

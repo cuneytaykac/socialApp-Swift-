@@ -27,7 +27,7 @@ class FeedViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
     
     func getDataFromFirestore(){
         let db = Firestore.firestore()
-        db.collection("Post")
+        db.collection("Post").order(by: "date", descending: true)
           .addSnapshotListener { documentSnapshot, error in
             guard let document = documentSnapshot else {
               print("Error fetching document: \(error!)")
@@ -39,7 +39,8 @@ class FeedViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
             }else{
                 for d in document.documents{
                     let data = d.data()
-                    if let post = Post(dictionary: data) {
+                   let documentId = d.documentID
+                    if let post = Post(dictionary: data,documentId:documentId) {
                             self.response.append(post)
                     }
                    
@@ -66,6 +67,8 @@ class FeedViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
         cell.username.text = "\(self.response[indexPath.row].createdBy)"
         cell.userComment.text = "\(self.response[indexPath.row].postComment)"
         cell.userImage.sd_setImage(with: URL(string: "\(self.response[indexPath.row].imageUrl)"), placeholderImage: UIImage(systemName: "photo"))
+        
+        cell.documentId = "\(self.response[indexPath.row].documentId)"
         
         return cell;
     }
