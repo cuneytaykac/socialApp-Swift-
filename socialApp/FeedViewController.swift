@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseFirestore
+import SDWebImage
 
 class FeedViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
@@ -64,7 +65,7 @@ class FeedViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
         cell.likeCount.text = "\(self.response[indexPath.row].likes)"
         cell.username.text = "\(self.response[indexPath.row].createdBy)"
         cell.userComment.text = "\(self.response[indexPath.row].postComment)"
-        cell.userImage.image = UIImage(systemName: "photo")
+        cell.userImage.sd_setImage(with: URL(string: "\(self.response[indexPath.row].imageUrl)"), placeholderImage: UIImage(systemName: "photo"))
         
         return cell;
     }
